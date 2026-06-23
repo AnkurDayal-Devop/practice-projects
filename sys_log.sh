@@ -2,13 +2,20 @@
 
 FILE="/home/admin-gn/projects/tony.log"
 LOGFILE="/home/admin-gn/projects/tony.log"
+BACKUP_DIR="/home/admin-gn/projects/log_backups"
+BACKUP_FILE="$BACKUP_DIR/tony_$(date +%Y%m%d_%H%M%S).log"
 
 CURRENT_MINUTE=$(date +%M)
 MINUTE_IN_BLOCK=$((10#$CURRENT_MINUTE % 10))
 
+if [ -f "$LOGFILE" ]; then
+    mkdir -p "$BACKUP_DIR"
+    cp "$LOGFILE" "$BACKUP_FILE"
+fi
+
 if [ -f "$FILE" ] && [ "$MINUTE_IN_BLOCK" -lt 5 ]; then
     echo "$(date)" > "$LOGFILE"
-   echo " File exists and this is the first 5 minutes of the 10-minute block" >> "$LOGFILE"
+    echo " File exists and this is the first 5 minutes of the 10-minute block" >> "$LOGFILE"
     echo "THIS MESSAGE SHOWS BEFORE .05, .15, .25, .35, .45, AND .55 OF EVERY HOUR" >> "$LOGFILE"
 else
     echo "YOU ARE IN THE SECOND 5 MINUTES OF THE 10-MINUTE BLOCK" > "$LOGFILE"
